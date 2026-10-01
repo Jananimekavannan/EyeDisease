@@ -1,0 +1,25 @@
+{
+  "version": "v1",
+  "steps": [
+    "black-border crop (pixels with max channel > 10)",
+    "pad to square with black",
+    "resize 512x512 INTER_AREA",
+    "BGR->RGB",
+    "resize 224x224 INTER_AREA",
+    "divide by 255",
+    "ImageNet mean/std normalisation",
+    "no Ben Graham / CLAHE"
+  ],
+  "mean": [
+    0.48500001430511475,
+    0.4560000002384186,
+    0.4059999883174896
+  ],
+  "std": [
+    0.2290000021457672,
+    0.2240000069141388,
+    0.22499999403953552
+  ],
+  "img_size": 224,
+  "code": "dr_infer.py: crop_pad_512 + to_tensor"
+}

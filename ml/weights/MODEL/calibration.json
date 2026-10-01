@@ -1,0 +1,9 @@
+{
+  "method": "temperature_scaling",
+  "temperature": 2.0687387852231383,
+  "referable_threshold": 0.29,
+  "fit_on": "FP32 validation outputs only",
+  "threshold_rule": "max specificity s.t. val sensitivity >= 0.95",
+  "inference": "FP32, raw image -> dr_infer.crop_pad_512 -> to_tensor",
+  "replaces": "FINAL/calibration.json (FP16-fitted, T=2.0728, thr=0.28) for production use"
+}

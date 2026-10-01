@@ -1,0 +1,122 @@
+{
+  "model": {
+    "checkpoint": "/content/gdrive/MyDrive/SIH26038/FINAL/efficientnet_b0_aptos.pth",
+    "sha256": "6c342eb3bf432fce8a078e55a9027a4c107bdaabe1e55c23d2c8070b3bd7c24a",
+    "sha256_verified": true,
+    "config": {
+      "arch": "efficientnet_b0",
+      "head": "ordinal_cumulative_4_logits",
+      "num_classes_model_output": 4,
+      "drop_rate": 0.3,
+      "img_size": 224,
+      "mean": [
+        0.48500001430511475,
+        0.4560000002384186,
+        0.4059999883174896
+      ],
+      "std": [
+        0.2290000021457672,
+        0.2240000069141388,
+        0.22499999403953552
+      ],
+      "class_names": [
+        "No DR",
+        "Mild",
+        "Moderate",
+        "Severe",
+        "Proliferative"
+      ],
+      "seed": 42,
+      "loss": "weighted_BCE_cumulative(per-sample inverse-freq weights)",
+      "lr": 0.0003,
+      "weight_decay": 0.0001,
+      "epochs": 20,
+      "batch_size": 32,
+      "model_selection": "best validation QWK",
+      "export_note": "*_logits.pt hold 5-class log-probabilities from the ordinal head"
+    },
+    "device": "cpu",
+    "dtype": "torch.float32",
+    "eval": true
+  },
+  "calibration": {
+    "temperature": 2.0687387852231383,
+    "referable_threshold": 0.29,
+    "official_temperature": 2.0687,
+    "official_threshold": 0.29,
+    "calibration_json_values": [
+      2.0687387852231383,
+      0.29
+    ]
+  },
+  "preprocessing": {
+    "source": "/content/gdrive/MyDrive/SIH26038/FINAL/dr_infer.py",
+    "crop": "crop_pad_512",
+    "crop_origin": "dr_infer.crop_pad_512 (imported)",
+    "resize": 224,
+    "resize_interpolation": "not detected -> cv2 default INTER_LINEAR",
+    "normalization": "ImageNet"
+  },
+  "gradcam": {
+    "actual_last_conv": "conv_head",
+    "expected_layer": "conv_head",
+    "layer_match": true,
+    "target": "calibrated P(Grade 2-4)",
+    "raw_ordinal_target_index": 1,
+    "activation_shape": [
+      1,
+      1280,
+      7,
+      7
+    ],
+    "overlay_base": "crop_pad_512 model-view image (not the raw photo)"
+  },
+  "verification": {
+    "raw_ordinal_index_used": 1,
+    "raw_index_means": [
+      0.6141999959945679,
+      0.4823000133037567,
+      0.2475000023841858,
+      0.10379999876022339
+    ],
+    "monotone_decreasing": true,
+    "auc_raw_outputs_vs_grade_ge2": [
+      0.9684,
+      0.9925,
+      0.9741,
+      0.9631
+    ],
+    "best_raw_index": 1,
+    "auc_calibrated_p_referable_vs_grade_ge2": 0.9925,
+    "n_pool": 200,
+    "pass": true,
+    "official_logprob_crosscheck": {
+      "status": "MISMATCH",
+      "n": 20,
+      "max_abs_logprob_diff": 3.94702,
+      "argmax_agreement": "18/20"
+    }
+  },
+  "checks": {
+    "gradient_flow": true,
+    "determinism": true,
+    "determinism_max_diff": [
+      0.0,
+      0.0
+    ],
+    "alignment": true,
+    "cam_mass_in_fundus": 0.476,
+    "faithfulness_pass_rate": 0.4,
+    "target_forward_matches_production": true
+  },
+  "examples_generated": 15,
+  "failure_or_uncertain_included": true,
+  "grade_decoding": "argmax of calibrated class probabilities (confirm against dr_infer.py)",
+  "issues": [
+    "Could not detect dr_infer.py resize interpolation; check the official cross-check result.",
+    "Official FP32 log-prob cross-check mismatch: {'status': 'MISMATCH', 'n': 20, 'max_abs_logprob_diff': 3.94702, 'argmax_agreement': '18/20'}. Preprocessing or image order may differ from Member 1.",
+    "Only 48% of Grad-CAM mass lies inside the fundus disc.",
+    "Weak faithfulness sanity (6/15); Grad-CAM at 7x7 is coarse."
+  ],
+  "lesion_status": "unavailable"
+}
